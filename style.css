@@ -1,0 +1,284 @@
+/* Design tokens: ungu dalam, mauve, rose lembut, emas. */
+:root{
+  --bg-deep:#120a24; --bg-mid:#2a1638; --mauve:#6b4570;
+  --rose:#e8a0b4; --rose-strong:#d9738f; --gold:#f3e3b5; --text:#f6e9ef;
+  --glass:rgba(255,255,255,.06); --line:rgba(255,255,255,.14);
+  --r:22px; --dur-fast:.25s; --dur-med:.7s; --dur-slow:1.4s;
+  --ease:cubic-bezier(.16,1,.3,1); --spring:cubic-bezier(.34,1.4,.64,1);
+  --s1:clamp(2.4rem,9vw,4.2rem); --s2:clamp(1.5rem,5.4vw,2.3rem);
+  --body:clamp(1.02rem,4.4vw,1.2rem);
+  --pad:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Cormorant Garamond",Georgia,serif; font-size:var(--body);
+  color:var(--text); min-height:100dvh; overflow:hidden;
+  background:linear-gradient(160deg,var(--bg-deep) 0%,var(--bg-mid) 45%,#4a2140 75%,var(--mauve) 130%);
+  background-size:180% 180%; animation:bgdrift 36s ease-in-out infinite alternate;
+}
+@keyframes bgdrift{to{background-position:90% 100%}}
+#bg{position:fixed;inset:0;z-index:0}
+#fx{position:fixed;inset:0;z-index:20;pointer-events:none}
+#stage{position:fixed;inset:0;z-index:1}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;min-height:44px;min-width:44px}
+/* Latar tiap scene: satu aktif, crossfade + scale/blur halus. */
+.scene{position:absolute;inset:0;overflow-y:auto;padding:calc(1.2rem + env(safe-area-inset-top,0px)) 1.1rem calc(2rem + env(safe-area-inset-bottom,0px));
+  display:flex;opacity:0;visibility:hidden;transform:scale(.965);filter:blur(10px);
+  transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease),filter var(--dur-med) var(--ease),visibility 0s var(--dur-med);
+  pointer-events:none}
+.scene.active{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease),filter var(--dur-med) var(--ease)}
+.wrap{margin:auto;width:100%;max-width:26rem;text-align:center;position:relative}
+.wrap.narrow{max-width:30rem}.wrap.wide{max-width:60rem}
+.title{font-family:"Playfair Display",Georgia,serif;font-weight:600;font-size:var(--s1);line-height:1.12;
+  background:linear-gradient(180deg,#fff 30%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 22px rgba(232,160,180,.35))}
+.title.sm{font-size:var(--s2)}
+.title em,.tag em{font-style:italic}
+.label{font-size:.82rem;letter-spacing:.32em;text-transform:uppercase;color:var(--rose);margin-bottom:.9rem}
+.label .orn,.orn{color:var(--gold);font-size:.8em;padding:.4rem}
+.tag{color:rgba(246,233,239,.85);margin:.7rem 0 1.4rem;font-size:1.12em}
+.hrt{color:var(--rose-strong)}
+.rule{border:0;border-top:1px solid var(--line);width:7rem;margin:1.2rem auto}
+.hint{color:rgba(246,233,239,.6);font-size:1em;margin-top:1rem}
+.back{align-self:flex-start;color:var(--rose);letter-spacing:.12em;font-size:.95rem;margin-bottom:1rem}
+/* Tombol: pill, utama gradasi rose, sekunder border tipis. */
+.btn{display:inline-block;border-radius:999px;padding:.95rem 2.1rem;letter-spacing:.14em;font-size:.92rem;font-weight:600;position:relative;overflow:hidden}
+.btn.primary{background:linear-gradient(135deg,var(--rose-strong),var(--rose));color:#2a0f1e;box-shadow:0 0 26px rgba(217,115,143,.45)}
+.btn.ghost{border:1px solid rgba(243,227,181,.5);color:var(--gold);margin-top:1.2rem}
+.btn[disabled]{opacity:.45;box-shadow:none;cursor:not-allowed}
+.btn.pulse:not([disabled]){animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 44px rgba(217,115,143,.7);transform:scale(1.03)}}
+.btn .rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s var(--ease);pointer-events:none}
+@keyframes rip{to{transform:scale(3);opacity:0}}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 8px 40px rgba(0,0,0,.35),0 0 30px rgba(232,160,180,.12)}
+/* Scene 1 countdown */
+.cd{display:flex;justify-content:center;align-items:flex-start;gap:.45rem;margin:1.4rem 0 .6rem}
+.cd-box{min-width:4.3rem;padding:.8rem .4rem .6rem}
+.cd-box{background:var(--glass);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.cd-num{display:block;font-family:"Playfair Display",serif;font-size:1.9rem;font-weight:700;color:#fff;text-shadow:0 0 18px rgba(232,160,180,.6)}
+.cd-num.swap{animation:numin .45s var(--ease)}
+@keyframes numin{from{transform:translateY(55%);opacity:0}}
+.cd-cap{font-size:.68rem;letter-spacing:.28em;color:var(--rose);margin-top:.2rem}
+.cd-sep{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--rose);padding-top:.7rem}
+.cd-note{min-height:1.6em;color:var(--gold);font-style:italic;margin-bottom:1rem}
+/* Scene 2 gift 3D murni CSS */
+.gift-stage{perspective:900px;margin:2rem auto 1rem;width:min(72vw,260px);height:min(72vw,260px);display:grid;place-items:center}
+.gift-float{animation:hover 3.4s ease-in-out infinite;transform-style:preserve-3d}
+@keyframes hover{50%{transform:translateY(-14px)}}
+.gift{--gs:150px;position:relative;width:var(--gs);height:var(--gs);transform-style:preserve-3d;transition:transform .2s}
+.face{position:absolute;inset:0;background:linear-gradient(150deg,#b6506e,#8e3a56);border:1px solid rgba(255,255,255,.2);
+  transform-origin:50% 100%;transition:transform .8s var(--spring)}
+.face::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 42%,#a8842f 42% 43.5%,var(--gold) 43.5% 56.5%,#a8842f 56.5% 58%,transparent 58%)}
+.front{transform:translateZ(calc(var(--gs)/2))}.back{transform:rotateY(180deg) translateZ(calc(var(--gs)/2))}
+.right{transform:rotateY(90deg) translateZ(calc(var(--gs)/2))}.left{transform:rotateY(-90deg) translateZ(calc(var(--gs)/2))}
+/* Alas + dinding dalam: interior tak pernah terlihat kosong/tembus */
+.bottom{position:absolute;inset:0;background:linear-gradient(150deg,#7e2f49,#5e2136);border:1px solid rgba(255,255,255,.18);
+  transform:rotateX(-90deg) translateZ(calc(var(--gs)/2))}
+.inner{position:absolute;inset:0;background:linear-gradient(180deg,#471a2b,#5e2136);
+  box-shadow:inset 0 24px 30px rgba(0,0,0,.55)}
+.inner-front{transform:rotateY(180deg) translateZ(calc(var(--gs)/2 - 6px))}
+.inner-back{transform:translateZ(calc(-1*(var(--gs)/2 - 6px)))}
+.inner-left{transform:rotateY(90deg) translateZ(calc(-1*(var(--gs)/2 - 6px)))}
+.inner-right{transform:rotateY(-90deg) translateZ(calc(-1*(var(--gs)/2 - 6px)))}
+/* Isi hadiah: hati bercahaya yang mengembang saat dibuka */
+.gift-content{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%) translateZ(24px) scale(0);pointer-events:none}
+.gift-content span{font-size:calc(var(--gs)*.36);line-height:1;color:#ffe3ec;
+  text-shadow:0 0 18px #ec4899,0 0 46px #d9738f,0 0 80px #f3e3b5}
+.gift.open .gift-content{transform:translate(-50%,-110%) translateZ(24px) scale(1);transition:transform .7s var(--spring) .25s}
+/* Dinding mekar keluar + tutup terbang saat dibuka */
+.gift.open .front{transform:translateZ(calc(var(--gs)/2)) rotateX(-90deg)}
+.gift.open .back{transform:rotateY(180deg) translateZ(calc(var(--gs)/2)) rotateX(-90deg)}
+.gift.open .left{transform:rotateY(-90deg) translateZ(calc(var(--gs)/2)) rotateX(-90deg)}
+.gift.open .right{transform:rotateY(90deg) translateZ(calc(var(--gs)/2)) rotateX(-90deg)}
+/* Mekar berurutan: depan rebah, sisi, belakang terakhir */
+.gift.open .left,.gift.open .right{transition-delay:.07s}
+.gift.open .back{transition-delay:.14s}
+.gift.open .gift-content span{animation:contentBeat 1.6s ease-in-out .9s infinite}
+@keyframes contentBeat{50%{transform:scale(1.12)}}
+.lid{position:absolute;left:-10px;right:-10px;top:-30px;height:40px;transform-style:preserve-3d;transition:transform .9s var(--ease),opacity .9s}
+.lid-top,.lid-front,.lid-back,.lid-left,.lid-right{position:absolute;background:linear-gradient(150deg,#d9738f,#a64a66);border:1px solid rgba(255,255,255,.25)}
+.lid-top{inset:0}
+.lid-top::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 42%,#a8842f 42% 43.5%,var(--gold) 43.5% 56.5%,#a8842f 56.5% 58%,transparent 58%)}
+.lid-top::before{content:"";position:absolute;left:0;right:0;top:50%;height:38%;transform:translateY(-50%);
+  background:linear-gradient(180deg,#f7e7bd,var(--gold) 55%,#c99a3a)}
+.lid-front{left:0;right:0;top:100%;height:36px;transform-origin:top;transform:rotateX(-90deg)}
+.lid-back{left:0;right:0;bottom:100%;height:36px;transform-origin:bottom;transform:rotateX(90deg)}
+.lid-left{top:0;bottom:0;right:100%;width:36px;transform-origin:right;transform:rotateY(-90deg)}
+.lid-right{top:0;bottom:0;left:100%;width:36px;transform-origin:left;transform:rotateY(90deg)}
+.bow{position:absolute;left:50%;top:-14px;transform:translateX(-50%)}
+.bow i{position:absolute;width:36px;height:24px;border:6px solid var(--gold);border-radius:50% 50% 0 50%;
+  box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.bow i:first-child{transform:translateX(-32px) rotate(-24deg)}
+.bow i:last-child{transform:translateX(-4px) scaleX(-1) rotate(-24deg)}
+.bow::after{content:"";position:absolute;left:50%;top:-4px;width:16px;height:16px;transform:translateX(-50%) rotate(45deg);
+  background:linear-gradient(135deg,#f7e7bd,#d9a94a);border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+/* Tutup terangkat-miring dulu, baru terbang jauh (2 tahap sinematik) */
+.gift.open .lid{animation:lidFly 1.15s var(--spring) forwards}
+@keyframes lidFly{
+  0%{transform:translate(0,0) rotate(0);opacity:1}
+  30%{transform:translate(26px,-70px) rotate(-14deg);opacity:1}
+  100%{transform:translate(190px,-230px) rotate(46deg);opacity:0}
+}
+.gift-glow{position:absolute;left:50%;top:38%;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff,var(--gold) 45%,transparent 70%);
+  transform:translate(-50%,-50%) scale(0);opacity:0}
+.gift.open .gift-glow{animation:beam 1.1s var(--ease) forwards}
+@keyframes beam{40%{opacity:1}to{transform:translate(-50%,-50%) scale(26);opacity:0}}
+.gift.shake{animation:shake 1.6s var(--ease)}
+@keyframes shake{
+  0%,100%{transform:scale(1,1) rotate(0)}
+  10%{transform:scale(1.14,.8) rotate(-4deg)}
+  25%{transform:scale(.9,1.12) rotate(4deg)}
+  40%{transform:scale(1.1,.86) rotate(-5deg)}
+  55%{transform:scale(.92,1.1) rotate(5deg)}
+  70%{transform:scale(1.06,.94) rotate(-3deg)}
+  85%{transform:scale(.98,1.04) rotate(2deg)}
+}
+.gift-shadow{width:130px;height:18px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 70%);animation:shdw 3.4s ease-in-out infinite}
+@keyframes shdw{50%{transform:scaleX(.8);opacity:.6}}
+/* Teks HAPPY BIRTHDAY meletus dari kotak */
+#burst-text{position:absolute;left:0;right:0;top:9%;text-align:center;pointer-events:none;z-index:5;
+  opacity:0;transition:opacity .45s var(--ease)}
+#burst-text.show{opacity:1}
+#burst-text.fade{opacity:0}
+#burst-text .bw{font-family:"Playfair Display",Georgia,serif;font-weight:700;
+  font-size:clamp(2.4rem,13vw,4rem);line-height:1.15;letter-spacing:.06em;
+  filter:drop-shadow(0 0 16px rgba(243,227,181,.55)) drop-shadow(0 0 44px rgba(217,115,143,.5))}
+#burst-text span{display:inline-block;transform:scale(0);opacity:0;
+  background:linear-gradient(180deg,#fff 25%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+#burst-text span.pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes pop{to{transform:scale(1);opacity:1}}
+/* Scene 3 bokeh + polaroid melayang */
+.bokeh{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.bokeh i{position:absolute;border-radius:50%;filter:blur(30px);opacity:.4;background:radial-gradient(circle,rgba(232,160,180,.7),transparent 70%)}
+.bokeh i:nth-child(1){width:220px;height:220px;left:-50px;top:8%}
+.bokeh i:nth-child(2){width:160px;height:160px;right:-40px;top:30%}
+.bokeh i:nth-child(3){width:260px;height:260px;left:20%;bottom:-80px}
+.bokeh i:nth-child(4){width:120px;height:120px;right:20%;top:8%}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.active .rv{opacity:1;transform:none}
+.active .rv:nth-child(2){transition-delay:.08s}.active .rv:nth-child(3){transition-delay:.16s}
+.active .rv:nth-child(4){transition-delay:.24s}.active .rv:nth-child(6){transition-delay:.4s}
+/* Scene 4 surat */
+.letter{padding:1.4rem 1.2rem;text-align:left;max-height:46dvh;overflow-y:auto;font-size:1.12em;line-height:1.75;cursor:pointer}
+.letter p{margin-bottom:.9em}
+.caret{display:inline-block;width:.6em;height:1.15em;background:var(--gold);vertical-align:-.15em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.letter-done{opacity:0;visibility:hidden;transform:translateY(12px);transition:all .6s var(--ease);margin-top:1.2rem}
+.letter-done.show{opacity:1;visibility:visible;transform:none}
+.big-heart{font-size:2.6rem;color:var(--rose-strong);animation:beat 1.6s ease-in-out infinite;text-shadow:0 0 26px rgba(217,115,143,.7)}
+@keyframes beat{12%,28%{transform:scale(1.22)}}
+/* Scene 5 memories */
+.mem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:1.4rem 0}
+.mem{perspective:600px}
+.mem figure{background:#fdf7f0;color:#5b4a52;border-radius:8px;padding:8px 8px 26px;transform:rotate(var(--rot,0deg)) scale(.92);opacity:0;
+  transition:transform .5s var(--spring),opacity .5s var(--ease);box-shadow:0 12px 30px rgba(0,0,0,.4);position:relative}
+.mem.in figure{transform:rotate(var(--rot,0deg));opacity:1}
+.mem img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;display:block;background:#e9d5dd}
+.mem .ph{aspect-ratio:1;display:grid;place-items:center;background:linear-gradient(150deg,#8e5a6e,#4a2540);color:var(--gold);font-size:2rem;border-radius:4px}
+.mem figcaption{font-size:.92rem;margin-top:.35rem;font-style:italic}
+.mem:hover figure,.mem:focus-within figure{transform:rotate(0) scale(1.08);z-index:2}
+/* Lightbox */
+#lightbox{position:fixed;inset:0;z-index:30;background:rgba(10,5,20,.92);display:grid;place-items:center;grid-template-columns:auto 1fr auto;gap:.4rem;padding:1rem}
+#lightbox[hidden]{display:none}
+#lightbox figure{text-align:center;max-width:min(88vw,640px)}
+#lb-img{max-width:100%;max-height:70dvh;border-radius:12px;border:6px solid #fdf7f0}
+#lb-cap{color:var(--gold);font-style:italic;margin-top:.6rem}
+#lightbox button{font-size:2.2rem;color:var(--rose);padding:.6rem}
+#lb-close{position:absolute;top:.4rem;right:.8rem}
+/* Scene 6 video */
+.video-frame{border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 0 40px rgba(232,160,180,.25);background:#000;position:relative}
+.video-frame video{width:100%;aspect-ratio:16/9;display:block;background:#000;object-fit:cover}
+.video-empty{padding:3rem 1.5rem;color:var(--rose)}
+.video-empty p:first-child{font-size:2.4rem}
+.v-controls{display:flex;align-items:center;gap:.55rem;padding:.6rem .7rem;background:rgba(18,10,36,.9)}
+.v-controls button{color:var(--gold);font-size:1.05rem}
+.v-prog{flex:1;height:22px;display:flex;align-items:center;cursor:pointer}
+.v-prog span{display:block;height:5px;width:0;border-radius:99px;background:linear-gradient(90deg,var(--rose-strong),var(--gold));position:relative;pointer-events:none}
+.v-time{font-size:.85rem;color:rgba(246,233,239,.75);white-space:nowrap}
+/* Scene 7 wishes */
+.wishes{padding:2rem 1.4rem}
+.wishes .tag{font-size:1.2em}
+#wish-lines p{opacity:0;transform:translateY(14px);transition:all .7s var(--ease);margin:.7em 0;font-size:1.12em}
+#wish-lines p.show{opacity:1;transform:none}
+.wish-heart{font-size:2.8rem;color:var(--rose-strong);margin:1rem 0 .4rem;animation:beat 1.8s infinite;text-shadow:0 0 30px rgba(217,115,143,.8)}
+.mini-heart{position:fixed;z-index:20;pointer-events:none;color:var(--rose);animation:rise 1.6s var(--ease) forwards}
+@keyframes rise{to{transform:translateY(-160px) scale(.4);opacity:0}}
+/* Scene 8 */
+#final-lines p{opacity:0;transform:translateY(12px);transition:all .8s var(--ease);margin:.8em 0;font-size:1.15em}
+#final-lines p.show{opacity:1;transform:none}
+.forever{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--gold);margin:1.4rem 0}
+/* Milo pixel-art 16x16, gerak hanya via transform. */
+#milo{position:fixed;left:0;top:0;z-index:26;width:76px;pointer-events:none;will-change:transform}
+#milo[hidden]{display:none}
+#milo-svg{width:100%;height:auto;display:block;pointer-events:auto;cursor:pointer;overflow:visible;
+  shape-rendering:crispEdges;image-rendering:pixelated;filter:drop-shadow(0 8px 14px rgba(0,0,0,.45))}
+#milo.flip #milo-svg{transform:scaleX(-1)}
+#milo-name{position:absolute;left:50%;top:-1.5rem;transform:translateX(-50%);white-space:nowrap;
+  font-size:.95rem;font-weight:700;letter-spacing:.14em;color:var(--gold);text-shadow:0 1px 8px rgba(0,0,0,.6),0 0 12px rgba(243,227,181,.4)}
+#milo.peek #milo-name{display:none}
+#milo .m-tail{transform-box:fill-box;transform-origin:0% 100%;animation:wag 2.2s ease-in-out infinite}
+@keyframes wag{50%{transform:rotate(14deg)}}
+#milo .m-lid{display:none}
+#milo.blink .m-lid,#milo.sleep .m-lid,#milo.purr .m-lid{display:block}
+#milo.sleep #px-pupils,#milo.purr #px-pupils{display:none}
+#milo.sleep .m-shut,#milo.purr .m-shut{display:block}
+#milo .m-tongue{display:none}
+#milo.groom .m-tongue{display:block}
+#milo.walk #milo-svg{animation:pad .38s ease-in-out infinite}
+@keyframes pad{50%{margin-top:-7px}}
+#milo.dash #milo-svg{animation:pad .22s ease-in-out infinite}
+#milo.hunt #milo-svg{transform:scaleY(.85)}
+#milo.jump #milo-svg{animation:jump .55s var(--spring)}
+@keyframes jump{35%{margin-top:-30px}70%{margin-top:0}}
+#milo.groom #milo-svg{animation:grm 1s ease-in-out 3}
+@keyframes grm{50%{transform:rotate(-9deg) translateY(4px)}}
+#milo.wobble #milo-svg{animation:wob .5s ease-in-out 2}
+@keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+#milo.knead .m-pawL{animation:knead .5s ease-in-out 2}
+#milo.knead .m-pawR{animation:knead .5s ease-in-out 2;animation-delay:.25s}
+@keyframes knead{50%{transform:translateY(-1px)}}
+#milo.purr #milo-svg{animation:rock .6s ease-in-out 4}
+@keyframes rock{50%{transform:rotate(4deg)}}
+#milo.stretch #milo-svg{animation:strch 2.5s var(--ease)}
+@keyframes strch{30%{transform:scaleX(1.3) scaleY(.75)}60%{transform:scaleX(.95) scaleY(1.05)}}
+#milo.peek #milo-svg{transform:rotate(-6deg)}
+#milo-zzz{position:absolute;right:-.4rem;top:-1.1rem;color:var(--gold);font-size:.95rem;letter-spacing:.1em;
+  opacity:0;animation:zfloat 2.6s ease-in-out infinite}
+#milo.sleep #milo-zzz{opacity:1}
+@keyframes zfloat{50%{transform:translateY(-8px)}}
+#milo-say{position:absolute;left:50%;top:-2.6rem;transform:translateX(-50%) scale(.6);white-space:nowrap;
+  background:var(--glass);border:1px solid var(--line);border-radius:99px;padding:.15rem .8rem;
+  font-size:.9rem;color:#fff;opacity:0;transition:all .3s var(--spring);backdrop-filter:blur(8px)}
+#milo.say #milo-say{opacity:1;transform:translateX(-50%) scale(1)}
+@media(max-width:480px){#milo{width:62px}}
+@media(prefers-reduced-motion:reduce){
+  #milo .m-tail,#milo.walk #milo-svg,#milo-zzz{animation:none}
+}
+/* Preloader, musik, sparkle */
+#preloader{position:fixed;inset:0;z-index:50;display:grid;place-content:center;gap:.6rem;background:var(--bg-deep);transition:opacity .6s}
+#preloader.gone{opacity:0;visibility:hidden}
+.pre-heart{font-size:3rem;color:var(--rose-strong);animation:beat 1.1s infinite;text-align:center}
+#preloader p{letter-spacing:.24em;font-size:.85rem;color:var(--rose)}
+#music{position:fixed;right:calc(.9rem + env(safe-area-inset-right,0px));bottom:calc(.9rem + env(safe-area-inset-bottom,0px));z-index:25;display:flex;align-items:center;gap:.5rem}
+#music[hidden]{display:none}
+#music-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--rose-strong),var(--mauve));display:grid;place-items:center;box-shadow:0 0 20px rgba(217,115,143,.5)}
+.eq{display:flex;gap:2px;align-items:flex-end;height:16px}
+.eq i{width:3px;background:#fff;border-radius:2px;height:5px}
+.playing .eq i{animation:eq .9s ease-in-out infinite}
+.playing .eq i:nth-child(2){animation-delay:.25s}.playing .eq i:nth-child(3){animation-delay:.5s}
+@keyframes eq{50%{height:15px}}
+#music-state{font-size:.8rem;letter-spacing:.2em;color:var(--rose)}
+.spark{position:fixed;z-index:5;pointer-events:none;color:var(--gold)}
+@media(min-width:480px){:root{--gs:170px}.mem-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:768px){
+  .wrap{max-width:34rem}.mem-grid{grid-template-columns:repeat(3,1fr)}
+  .gift{--gs:190px}
+}
+@media(min-width:1100px){.mem-grid{grid-template-columns:repeat(4,1fr)}.wrap.wide{max-width:64rem}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  body{animation:none}
+}

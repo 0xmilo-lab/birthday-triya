@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Kejutan ulang tahun interaktif untuk istri tercinta.">
+<meta name="theme-color" content="#120a24">
+<title>Untukmu, Sayang ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<noscript><p style="padding:2rem;text-align:center">Halaman ini butuh JavaScript untuk kejutan interaktifnya.</p></noscript>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div id="preloader" role="status" aria-label="Memuat">
+  <div class="pre-heart" aria-hidden="true">♥</div>
+  <p>Menyiapkan kejutan…</p>
+</div>
+
+<main id="stage">
+  <!-- SCENE 1 : COUNTDOWN -->
+  <section class="scene" id="scene-1" data-scene="1" aria-label="Hitung mundur">
+    <div class="wrap">
+      <h1 class="title">Hello beb, Your Special Day<br><em>is Coming</em></h1>
+      <div class="cd" role="timer" aria-label="Hitung mundur hari spesial">
+        <div class="cd-box"><span class="cd-num" id="cd-d">00</span><span class="cd-cap">HARI</span></div><span class="cd-sep">:</span>
+        <div class="cd-box"><span class="cd-num" id="cd-h">00</span><span class="cd-cap">JAM</span></div><span class="cd-sep">:</span>
+        <div class="cd-box"><span class="cd-num" id="cd-m">00</span><span class="cd-cap">MENIT</span></div><span class="cd-sep">:</span>
+        <div class="cd-box"><span class="cd-num" id="cd-s">00</span><span class="cd-cap">DETIK</span></div>
+      </div>
+      <p class="cd-note" id="cd-note" aria-live="polite" hidden></p>
+      <button class="btn primary pulse" id="btn-gift" disabled>OPEN YOUR GIFT</button>
+    </div>
+  </section>
+
+  <!-- SCENE 2 : GIFT -->
+  <section class="scene" id="scene-2" data-scene="2" aria-label="Kotak hadiah">
+    <div class="wrap">
+      <p class="label"><span class="orn">✦</span> ADA SESUATU UNTUKMU <span class="orn">✦</span></p>
+      <div class="gift-stage" id="gift-stage">
+        <div class="gift-float" id="gift-float">
+          <div class="gift" id="gift" role="button" tabindex="0" aria-label="Buka kotak hadiah">
+            <div class="face front"></div><div class="face back"></div>
+            <div class="face left"></div><div class="face right"></div>
+            <div class="bottom"></div>
+            <div class="inner inner-front"></div><div class="inner inner-back"></div>
+            <div class="inner inner-left"></div><div class="inner inner-right"></div>
+            <div class="gift-content" aria-hidden="true"><span>♥</span></div>
+            <div class="lid" id="gift-lid">
+              <div class="lid-top"></div><div class="lid-front"></div><div class="lid-back"></div>
+              <div class="lid-left"></div><div class="lid-right"></div>
+              <div class="bow"><i></i><i></i></div>
+            </div>
+            <div class="gift-glow" id="gift-glow"></div>
+          </div>
+        </div>
+        <div class="gift-shadow" aria-hidden="true"></div>
+      </div>
+      <div id="burst-text" aria-hidden="true"></div>
+      <p class="hint">Ketuk kotaknya untuk membuka</p>
+    </div>
+  </section>
+
+  <!-- SCENE 3 : COVER -->
+  <section class="scene" id="scene-3" data-scene="3" aria-label="Sampul surat">
+    <div class="bokeh" id="bokeh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <button class="back" data-go="2" aria-label="Kembali">‹ Kembali</button>
+      <p class="label rv"><span class="orn">✦</span> A LOVE LETTER FOR YOU <span class="orn">✦</span></p>
+      <h1 class="title rv">Your Special <em>Day</em></h1>
+      <p class="tag rv"><em>Created with love, just for you</em></p>
+      <hr class="rule rv">
+      <button class="btn primary rv" data-go="4">READ MY LETTER</button>
+    </div>
+  </section>
+
+  <!-- SCENE 4 : LETTER -->
+  <section class="scene" id="scene-4" data-scene="4" aria-label="Surat cinta">
+    <div class="wrap narrow">
+      <button class="back" data-go="3" aria-label="Kembali">‹ Kembali</button>
+      <p class="label"><span class="orn">✦</span> READ IT SLOWLY <span class="orn">✦</span></p>
+      <h1 class="title sm"><em id="letter-title">Happy Birthday</em></h1>
+      <div class="glass letter" id="letter-card" role="button" tabindex="0" aria-label="Ketuk untuk menampilkan seluruh surat">
+        <div id="letter-body" aria-live="polite"></div><span class="caret" id="letter-caret" aria-hidden="true"></span>
+      </div>
+      <p class="hint" id="letter-hint">Ketuk surat untuk menampilkan semuanya</p>
+      <div class="letter-done" id="letter-done">
+        <div class="big-heart" aria-hidden="true">♥</div>
+        <button class="btn primary" data-go="5">LANJUT ✦</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 5 : MEMORIES -->
+  <section class="scene" id="scene-5" data-scene="5" aria-label="Kenangan kita">
+    <div class="wrap wide">
+      <button class="back" data-go="4" aria-label="Kembali">‹ Kembali</button>
+      <h1 class="title sm">Our Memories</h1>
+      <p class="label"><span class="orn">✦</span> EVERY MOMENT CAPTURED IN LOVE <span class="orn">✦</span></p>
+      <div class="mem-grid" id="mem-grid"></div>
+      <button class="btn ghost" data-go="6">A MOMENT FOR YOU →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 6 : VIDEO -->
+  <section class="scene" id="scene-6" data-scene="6" aria-label="Pesan video">
+    <div class="wrap narrow">
+      <button class="back" data-go="5" aria-label="Kembali">‹ Kembali</button>
+      <h1 class="title sm">A Moment <em>For You</em></h1>
+      <p class="label"><span class="orn">✦</span> A SPECIAL VIDEO MESSAGE <span class="orn">✦</span></p>
+      <div class="video-frame" id="video-frame">
+        <video id="video" playsinline preload="metadata" aria-label="Pesan video"></video>
+        <div class="video-empty" id="video-empty" hidden>
+          <p>♥</p><p>[Video belum ditambahkan]<br><small>Isi <code>video.src</code> di config.js</small></p>
+        </div>
+        <div class="v-controls" id="v-controls">
+          <button id="v-play" aria-label="Putar atau jeda">▶</button>
+          <div class="v-prog" id="v-prog" role="slider" tabindex="0" aria-label="Posisi video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="v-fill"></span></div>
+          <span class="v-time" id="v-time">0:00 / 0:00</span>
+          <button id="v-mute" aria-label="Bisukan atau suarakan">♪</button>
+          <button id="v-full" aria-label="Layar penuh">⛶</button>
+        </div>
+      </div>
+      <button class="btn primary" data-go="7">BIRTHDAY WISHES →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 7 : WISHES -->
+  <section class="scene" id="scene-7" data-scene="7" aria-label="Ucapan ulang tahun">
+    <div class="wrap narrow">
+      <button class="back" data-go="6" aria-label="Kembali">‹ Kembali</button>
+      <div class="glass wishes">
+        <h1 class="title sm"><em>Birthday Wishes</em></h1>
+        <p class="tag">Happy Birthday, my love <span class="hrt">♥</span></p>
+        <div id="wish-lines"></div>
+        <button class="wish-heart" id="wish-heart" aria-label="Ketuk hati ini">♥</button>
+        <button class="btn ghost" data-go="8">ONE MORE THING ●</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 8 : FINALE -->
+  <section class="scene" id="scene-8" data-scene="8" aria-label="Penutup">
+    <div class="wrap narrow">
+      <h1 class="title sm"><span id="final-title"></span><span class="caret" id="final-caret" aria-hidden="true"></span></h1>
+      <div id="final-lines"></div>
+      <p class="forever">Forever yours. <span class="hrt">♥</span></p>
+      <button class="btn ghost" id="btn-replay">↩ REPLAY FROM START</button>
+    </div>
+  </section>
+</main>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- MILO si kucing -->
+<div id="milo" role="button" tabindex="0" aria-label="Sapa Milo si kucing" hidden>
+  <span id="milo-name">Milo ♥</span>
+  <svg id="milo-svg" viewBox="0 0 16 16" aria-hidden="true">
+    <g class="m-tail" fill="#e89b3f">
+      <rect x="13" y="11" width="1" height="2"/>
+      <rect x="14" y="9" width="1" height="2"/>
+      <rect x="14" y="8" width="1" height="1" fill="#b26a24"/>
+    </g>
+    <g id="px-base"></g>
+    <g id="px-pupils" fill="#3a2430">
+      <rect x="4" y="5" width="2" height="1"/>
+      <rect x="9" y="5" width="2" height="1"/>
+    </g>
+    <rect class="m-tongue" x="7" y="9" width="2" height="1" fill="#e87a8a"/>
+    <rect class="m-pawL" x="5" y="14" width="2" height="1" fill="#f6d9a8"/>
+    <rect class="m-pawR" x="9" y="14" width="2" height="1" fill="#f6d9a8"/>
+    <g class="m-lid" fill="#e89b3f">
+      <rect x="4" y="5" width="3" height="2"/>
+      <rect x="9" y="5" width="3" height="2"/>
+    </g>
+    <g class="m-shut" fill="#3a2430" hidden>
+      <rect x="4" y="6" width="3" height="1"/>
+      <rect x="9" y="6" width="3" height="1"/>
+    </g>
+  </svg>
+  <span id="milo-zzz" aria-hidden="true">z z z</span>
+  <span id="milo-say" aria-hidden="true"></span>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Lihat foto" hidden>
+  <button id="lb-close" aria-label="Tutup">×</button>
+  <button id="lb-prev" aria-label="Foto sebelumnya">‹</button>
+  <figure><img id="lb-img" alt="Foto kenangan"><figcaption id="lb-cap"></figcaption></figure>
+  <button id="lb-next" aria-label="Foto berikutnya">›</button>
+</div>
+
+<!-- MUSIK -->
+<div id="music" hidden>
+  <button id="music-btn" aria-label="Putar atau jeda musik"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+  <span id="music-state">paused</span>
+</div>
+
+<script>
+/* Pengaman boot: nilai baku + anti-stuck bila config.js/main.js gagal dimuat. */
+window.CONFIG=window.CONFIG||{namaIstri:"Triya Devi",namaSaya:"Muhammad Hanafi",tanggalUlangTahun:"",suratJudul:"Happy Birthday",suratIsi:["[ISI DI SINI]"],ucapanSingkat:"[ISI DI SINI]",penutup:["[ISI DI SINI]"],foto:[],video:{src:"",poster:""},musik:"",kucing:{nama:"Milo",aktif:true}};
+window.__booted=false;
+window.addEventListener("error",function(e){if(window.__booted)return;var p=document.getElementById("preloader");if(p&&p.querySelectorAll("p").length<2){var m=document.createElement("p");m.style.cssText="color:#f3e3b5;font-size:.9rem;max-width:22rem";m.textContent="Galat: "+(e.message||"sebuah file gagal dimuat")+". Pastikan config.js dan main.js satu folder dengan index.html.";p.appendChild(m)}},true);
+setTimeout(function(){if(window.__booted)return;var p=document.getElementById("preloader");if(p)p.classList.add("gone");var s=document.getElementById("scene-1");if(s)s.classList.add("active")},6000);
+</script>
+<script src="config.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
