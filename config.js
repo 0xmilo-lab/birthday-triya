@@ -26,7 +26,8 @@ const CONFIG = {
     { src: "assets/photos/6.webp", caption: "" }
   ],
   video: { src: "assets/video/pesan.mp4", poster: "assets/video/poster.webp" },
-  musik: "",
+  musik: "assets/audio/lagu.mp3",
+  sfx: "assets/audio/kembang.mp3",
   /* Milo si kucing mandiri: jalan random, lari ke titik klik. aktif:false untuk sembunyikan. */
   kucing: { nama: "Milo", aktif: true }
 };

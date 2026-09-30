@@ -67,16 +67,17 @@ function ambient(){ /* kelopak & hati pelan mengikuti scene */
 }
 function step(p){
   p.life++;if(p.life>p.max){p.on=false;return}
+  const D=DT; /* faktor delta-time: gerak konsisten walau FPS turun */
   if(p.k==="s")return;
-  if(p.k==="x"){p.x+=p.vx;p.y+=p.vy;return}
-  if(p.k==="c"){p.vy+=.12;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;return}
-  if(p.k==="r"){p.vy*=1.03;p.x+=p.vx;p.y+=p.vy; /* roket: melesat lalu meledak */
+  if(p.k==="x"){p.x+=p.vx*D;p.y+=p.vy*D;return}
+  if(p.k==="c"){p.vy+=.12*D;p.x+=p.vx*D;p.y+=p.vy*D;p.rot+=p.vr*D;return}
+  if(p.k==="r"){p.vy*=1.03;p.x+=p.vx*D;p.y+=p.vy*D; /* roket: melesat lalu meledak */
     if(p.y<=p.ty||p.y<-30){p.on=false;explode(p.x,Math.max(50,p.y),p.c)}return}
-  if(p.k==="f"){p.vx*=.986;p.vy=p.vy*.986+.055;p.x+=p.vx;p.y+=p.vy;return} /* pecahan api */
-  if(p.k==="l"){p.y+=p.vy;p.x+=p.vx; /* balon naik, meletus di atas */
+  if(p.k==="f"){p.vx*=.986;p.vy=p.vy*.986+.055*D;p.x+=p.vx*D;p.y+=p.vy*D;return} /* pecahan api */
+  if(p.k==="l"){p.y+=p.vy*D;p.x+=p.vx*D; /* balon naik, meletus di atas */
     if(p.y<70){p.on=false;if(!RM)popBalloon(p)}return}
-  if(p.k==="b"){p.x+=p.vx;p.y+=p.vy;if(p.x<-150)p.x=W+150;if(p.x>W+150)p.x=-150;if(p.y<-150)p.y=H+150;if(p.y>H+150)p.y=-150;return}
-  p.x+=p.vx+(p.sw?Math.sin((p.life+p.sw*40)/40)*.4:0);p.y+=p.vy;p.rot+=p.vr;
+  if(p.k==="b"){p.x+=p.vx*D;p.y+=p.vy*D;if(p.x<-150)p.x=W+150;if(p.x>W+150)p.x=-150;if(p.y<-150)p.y=H+150;if(p.y>H+150)p.y=-150;return}
+  p.x+=(p.vx+(p.sw?Math.sin((p.life+p.sw*40)/40)*.4:0))*D;p.y+=p.vy*D;p.rot+=p.vr*D;
   if(p.y>H+30||p.y<-40)p.on=false;
 }
 function draw(p){
@@ -142,12 +143,13 @@ function launchShow(){ /* pesta buka hadiah: konfeti + balon + roket + tulisan *
   const cols=["#e8a0b4","#f3e3b5","#a78bfa","#67e8f9","#f6e9ef","#d9738f"];
   const dark=["#a14a68","#b08a3e","#5b3fa8","#1e7d96","#b99aa8","#8e3550"];
   const nb=MOBILE?36:72;
-  for(let i=0;i<nb;i++){const ci=i%cols.length;
-    setTimeout(()=>emit({k:"l",top:true,x:bx+R(-55,55),y:by+R(-12,12),vx:R(-.25,.25),
-      vy:R(-1.15,-.55),r:R(13,22),shape:i%4,c:cols[ci],c2:dark[ci],sw:R(0,6),max:1400}),i*45)}
+  for(let i=0;i<nb;i++){const ci=i%cols.length,side=i%2?1:-1; /* klaster kiri-kanan, koridor tengah lega */
+    setTimeout(()=>emit({k:"l",top:true,x:bx+side*R(60,180),y:by+R(-12,12),vx:R(-.25,.25),
+      vy:R(-1.5,-.72),r:R(13,22),shape:i%4,c:cols[ci],c2:dark[ci],sw:R(0,6),max:1400}),i*45)}
   const rc=["#f3e3b5","#e8a0b4","#a78bfa","#67e8f9"],nr=MOBILE?10:18;
-  for(let i=0;i<nr;i++)setTimeout(()=>emit({k:"r",top:true,x:bx+R(-70,70),y:H*.5,
-    vy:R(-7.5,-6),vx:R(-.6,.6),ty:R(H*.12,H*.32),c:rc[i%rc.length],max:300}),250+i*220);
+  for(let i=0;i<nr;i++){const side=i%2?1:-1;
+    setTimeout(()=>emit({k:"r",top:true,x:bx+side*R(50,150),y:H*.5,
+    vy:R(-7.5,-6),vx:R(-.6,.6),ty:R(H*.12,H*.32),c:rc[i%rc.length],max:300}),250+i*220)}
   showBurstText();
 }
 let burstTimers=[];
@@ -164,7 +166,10 @@ function showBurstText(){ /* HAPPY BIRTHDAY meletus huruf per huruf */
 }
 function hideBurstText(){burstTimers.forEach(clearTimeout);burstTimers=[];
   const box=$("#burst-text");box.classList.remove("show","fade");box.innerHTML=""}
-function loop(){requestAnimationFrame(loop);if(document.hidden)return;tickN++;
+let DT=1,lastT=0;
+function loop(now){requestAnimationFrame(loop);if(document.hidden)return;tickN++;
+  DT=lastT?Math.min(2.5,Math.max(.5,(now-lastT)/16.7)):1;lastT=now; /* kompensasi FPS */
+  px+=(tpx-px)*.04;py+=(tpy-py)*.04;ambient();miloTick();
   px+=(tpx-px)*.04;py+=(tpy-py)*.04;ambient();miloTick();
   ctx.clearRect(0,0,W,H);fctx.clearRect(0,0,W,H);
   for(const p of pool)if(p.on){step(p);if(p.on)draw(p)}
@@ -182,6 +187,18 @@ function fade(v){if(!audio)return;clearInterval(fade.t);const from=audio.volume,
 function musicStart(){if(!audio||!audio.paused)return;audio.play().catch(()=>{});fade(mVol);$("#music").classList.add("playing");$("#music-state").textContent="playing"}
 function musicToggle(){if(!audio)return;if(audio.paused)musicStart();else{fade(0);setTimeout(()=>audio.pause(),1600);$("#music").classList.remove("playing");$("#music-state").textContent="paused"}}
 $("#music-btn").addEventListener("click",musicToggle);
+/* SFX kembang api: bunyi sekali tiap kotak dibuka */
+let sfx=null;
+function initSfx(){if(!CONFIG.sfx)return;sfx=new Audio(CONFIG.sfx);sfx.volume=.9}
+function playSfx(){if(!sfx)return; /* bunyi 6 detik: penuh 4 detik + fade out 2 detik */
+  try{sfx.currentTime=0;sfx.volume=.9;sfx.play().catch(()=>{})}catch(_){}
+  clearTimeout(playSfx.t);clearInterval(playSfx.f);
+  playSfx.t=setTimeout(()=>{
+    const t0=performance.now();
+    playSfx.f=setInterval(()=>{const k=Math.min(1,(performance.now()-t0)/2000);
+      try{sfx.volume=.9*(1-k)}catch(_){}
+      if(k>=1){clearInterval(playSfx.f);try{sfx.pause()}catch(_){}}},100);
+  },4000)}
 
 /* ---------- Scene 1: countdown ---------- */
 const target=Date.parse(CONFIG.tanggalUlangTahun||"");
@@ -211,9 +228,9 @@ $("#gift-stage").addEventListener("pointerleave",()=>gift.style.transform="");
 function openGift(){
   if(opened||(CONFIG.terkunci&&!arrived))return;opened=true;musicStart();
   try{navigator.vibrate&&navigator.vibrate(30)}catch(_){}
-  if(RM){gift.classList.add("open");launchShow();setTimeout(()=>go(3),900);return}
+  if(RM){gift.classList.add("open");launchShow();playSfx();setTimeout(()=>go(3),900);return}
   gift.classList.add("shake");
-  setTimeout(()=>{gift.classList.remove("shake");gift.classList.add("open");launchShow();
+  setTimeout(()=>{gift.classList.remove("shake");gift.classList.add("open");launchShow();playSfx();
     try{navigator.vibrate&&navigator.vibrate([30,50,30])}catch(_){}
     setTimeout(()=>go(3),4800)},1600);
 }
@@ -517,6 +534,11 @@ if(FINE&&!RM){let last=0;
 
 /* ---------- Preloader: hati berdenyut sampai font siap ---------- */
 initMusic();
+initSfx();
+musicStart(); /* coba langsung terputar saat web dibuka */
+const unlock=()=>{musicStart(); /* sentuhan/ketikan pertama = izin browser, musik menyala */
+  removeEventListener("pointerdown",unlock,true);removeEventListener("touchend",unlock,true);removeEventListener("keydown",unlock,true)};
+addEventListener("pointerdown",unlock,true);addEventListener("touchend",unlock,true,{passive:true});addEventListener("keydown",unlock,true);
 requestAnimationFrame(loop); /* frame pertama jalan setelah seluruh script dievaluasi */
 const t0=performance.now();
 Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,3500))]).then(()=>{

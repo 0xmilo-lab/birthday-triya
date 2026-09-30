@@ -137,16 +137,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;min-he
 }
 .gift-shadow{width:130px;height:18px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 70%);animation:shdw 3.4s ease-in-out infinite}
 @keyframes shdw{50%{transform:scaleX(.8);opacity:.6}}
-/* Teks HAPPY BIRTHDAY meletus dari kotak */
-#burst-text{position:absolute;left:0;right:0;top:9%;text-align:center;pointer-events:none;z-index:5;
+/* Teks HAPPY BIRTHDAY: overlay di atas balon + kontur agar selalu terbaca */
+#burst-text{position:fixed;left:0;right:0;top:7%;text-align:center;pointer-events:none;z-index:25;
   opacity:0;transition:opacity .45s var(--ease)}
 #burst-text.show{opacity:1}
 #burst-text.fade{opacity:0}
+#burst-text::before{content:"";position:absolute;inset:-12% -6%;z-index:-1;
+  background:radial-gradient(ellipse at center,rgba(10,4,20,.55),transparent 70%)}
 #burst-text .bw{font-family:"Playfair Display",Georgia,serif;font-weight:700;
   font-size:clamp(2.4rem,13vw,4rem);line-height:1.15;letter-spacing:.06em;
   filter:drop-shadow(0 0 16px rgba(243,227,181,.55)) drop-shadow(0 0 44px rgba(217,115,143,.5))}
 #burst-text span{display:inline-block;transform:scale(0);opacity:0;
-  background:linear-gradient(180deg,#fff 25%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  background:linear-gradient(180deg,#fff 25%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-stroke:.5px rgba(90,40,60,.55)}
 #burst-text span.pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes pop{to{transform:scale(1);opacity:1}}
 /* Scene 3 bokeh + polaroid melayang */

@@ -59,7 +59,6 @@
         </div>
         <div class="gift-shadow" aria-hidden="true"></div>
       </div>
-      <div id="burst-text" aria-hidden="true"></div>
       <p class="hint">Ketuk kotaknya untuk membuka</p>
     </div>
   </section>
@@ -140,6 +139,7 @@
 </main>
 
 <canvas id="fx" aria-hidden="true"></canvas>
+<div id="burst-text" aria-hidden="true"></div>
 
 <!-- MILO si kucing -->
 <div id="milo" role="button" tabindex="0" aria-label="Sapa Milo si kucing" hidden>
@@ -187,7 +187,7 @@
 
 <script>
 /* Pengaman boot: nilai baku + anti-stuck bila config.js/main.js gagal dimuat. */
-window.CONFIG=window.CONFIG||{namaIstri:"Triya Devi",namaSaya:"Muhammad Hanafi",tanggalUlangTahun:"",suratJudul:"Happy Birthday",suratIsi:["[ISI DI SINI]"],penutup:["[ISI DI SINI]"],foto:[],video:{src:"",poster:""},musik:"",kucing:{nama:"Milo",aktif:true}};
+window.CONFIG=window.CONFIG||{namaIstri:"Triya Devi",namaSaya:"Muhammad Hanafi",tanggalUlangTahun:"",suratJudul:"Happy Birthday",suratIsi:["[ISI DI SINI]"],penutup:["[ISI DI SINI]"],foto:[],video:{src:"",poster:""},musik:"",sfx:"",kucing:{nama:"Milo",aktif:true}};
 window.__booted=false;
 window.addEventListener("error",function(e){if(window.__booted)return;var p=document.getElementById("preloader");if(p&&p.querySelectorAll("p").length<2){var m=document.createElement("p");m.style.cssText="color:#f3e3b5;font-size:.9rem;max-width:22rem";m.textContent="Galat: "+(e.message||"sebuah file gagal dimuat")+". Pastikan config.js dan main.js satu folder dengan index.html.";p.appendChild(m)}},true);
 setTimeout(function(){if(window.__booted)return;var p=document.getElementById("preloader");if(p)p.classList.add("gone");var s=document.getElementById("scene-1");if(s)s.classList.add("active")},6000);
