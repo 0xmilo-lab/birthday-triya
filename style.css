@@ -37,6 +37,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;min-he
 .title.sm{font-size:var(--s2)}
 .title em,.tag em{font-style:italic}
 .label{font-size:.82rem;letter-spacing:.32em;text-transform:uppercase;color:var(--rose);margin-bottom:.9rem}
+/* Label Scene 2: lebih besar + terdorong ke atas menjauhi kotak */
+#scene-2 .label{font-size:.98rem;margin-bottom:1.7rem}
 .label .orn,.orn{color:var(--gold);font-size:.8em;padding:.4rem}
 .tag{color:rgba(246,233,239,.85);margin:.7rem 0 1.4rem;font-size:1.12em}
 .rule{border:0;border-top:1px solid var(--line);width:7rem;margin:1.2rem auto}

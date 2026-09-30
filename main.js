@@ -155,7 +155,7 @@ function launchShow(){ /* pesta buka hadiah: konfeti + balon + roket + tulisan *
 let burstTimers=[];
 function showBurstText(){ /* HAPPY BIRTHDAY meletus huruf per huruf */
   const box=$("#burst-text");box.innerHTML="";
-  ["HAPPY","BIRTHDAY"].forEach(word=>{
+  ["HAPPY","BIRTHDAY","ISTRI KU"].forEach(word=>{
     const div=document.createElement("div");div.className="bw";
     [...word].forEach(ch=>{const s=document.createElement("span");s.textContent=ch;div.appendChild(s)});
     box.appendChild(div)});
@@ -246,18 +246,22 @@ function startLetter(){if(letterRun)return;letterRun=true;
   if(RM){body.innerHTML=paras.map(p=>`<p>${p}</p>`).join("");finishLetter();return}
   let pi=0,ci=0,pel=null;
   $("#letter-caret").style.display="";
+  const card=$("#letter-card");
+  const follow=()=>{ /* ikuti ketikan hanya bila user di dekat bawah */
+    if(card.scrollHeight-card.scrollTop-card.clientHeight<80)card.scrollTop=card.scrollHeight};
   (function type(){
     if(letterStop){body.innerHTML=paras.map(p=>`<p>${p}</p>`).join("");finishLetter();return}
     if(pi>=paras.length){finishLetter();return}
     if(!pel){pel=document.createElement("p");body.appendChild(pel)}
     const t=paras[pi];
-    if(ci<=t.length){pel.textContent=t.slice(0,ci++);
+    if(ci<=t.length){pel.textContent=t.slice(0,ci++);follow();
       const ch=t[ci-2]; /* jeda napas di koma dan titik */
       setTimeout(type,/[,;]/.test(ch)?160:/[.!?…]/.test(ch)?320:28+Math.random()*12);
     }else{pi++;ci=0;pel=null;setTimeout(type,260)}
   })();
 }
-function finishLetter(){$("#letter-caret").style.display="none";letterDone=true;$("#letter-hint").style.display="none";$("#letter-done").classList.add("show")}
+function finishLetter(){$("#letter-caret").style.display="none";letterDone=true;$("#letter-hint").style.display="none";$("#letter-done").classList.add("show");
+  $("#letter-card").scrollTop=0; /* selesai: kembali ke atas, user scroll manual */}
 $("#letter-card").addEventListener("click",()=>{if(letterRun&&!letterDone)letterStop=true});
 
 /* ---------- Scene 5: memories + lightbox ---------- */
@@ -265,7 +269,7 @@ let lbIdx=0,lbList=[];
 function memData(){return CONFIG.foto&&CONFIG.foto.length?CONFIG.foto:Array.from({length:6},(_,i)=>({src:"",caption:"[Foto "+(i+1)+"]"}))}
 function renderMem(){if(entered[5])return;entered[5]=1;
   const g=$("#mem-grid");
-  g.innerHTML=memData().map((f,i)=>`<div class="mem" style="--rot:${(i*37%13-6).toFixed(1)}deg"><figure tabindex="0" data-i="${i}" role="button" aria-label="Buka foto ${i+1}">${f.src?`<img src="${f.src}" alt="${f.caption||"Foto "+(i+1)}" loading="lazy">`:`<div class="ph">♥</div>`}<figcaption>${f.caption||"[Foto "+(i+1)+"]"}</figcaption></figure></div>`).join("");
+  g.innerHTML=memData().map((f,i)=>`<div class="mem" style="--rot:${(i*37%13-6).toFixed(1)}deg"><figure tabindex="0" data-i="${i}" role="button" aria-label="Buka foto ${i+1}">${f.src?`<img src="${f.src}" alt="${f.caption||"Foto "+(i+1)}" loading="lazy">`:`<div class="ph">♥</div>`}<figcaption>${f.caption||""}</figcaption></figure></div>`).join("");
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.transitionDelay=(+e.target.querySelector("figure").dataset.i*70)+"ms";e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.15});
   $$("#mem-grid .mem").forEach(m=>io.observe(m));
   if(FINE&&!RM)g.addEventListener("pointermove",e=>{ /* tilt 3D halus di desktop */
@@ -278,7 +282,7 @@ function renderMem(){if(entered[5])return;entered[5]=1;
 function openLB(i){lbList=memData();lbIdx=wrapIdx(i,lbList.length);showLB();$("#lightbox").hidden=false;$("#lb-close").focus()}
 function showLB(){const f=lbList[lbIdx],img=$("#lb-img");
   if(f.src){img.src=f.src;img.alt=f.caption||"Foto kenangan"}else{img.removeAttribute("src");img.alt="Placeholder foto"}
-  $("#lb-cap").textContent=f.caption||"[Foto "+(lbIdx+1)+"]"}
+  $("#lb-cap").textContent=f.caption||""}
 function closeLB(){$("#lightbox").hidden=true}
 $("#lb-close").addEventListener("click",closeLB);
 $("#lb-prev").addEventListener("click",()=>{lbIdx=wrapIdx(lbIdx-1,lbList.length);showLB()});
