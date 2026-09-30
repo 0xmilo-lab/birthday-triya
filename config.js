@@ -3,7 +3,7 @@ const CONFIG = {
   namaIstri: "Triya Devi",
   namaSaya: "Muhammad Hanafi",
   /* true = mode produksi (countdown mengunci tombol). false = mode develop (semua terbuka). */
-  terkunci: false,
+  terkunci: true,
   /* Format: "YYYY-MM-DDTHH:mm:ss". Kosongkan ("") agar tombol hadiah langsung aktif. */
   tanggalUlangTahun: "2026-10-02T00:00:00",
   suratJudul: "Happy Birthday",
