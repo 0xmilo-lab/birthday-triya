@@ -155,7 +155,7 @@ function launchShow(){ /* pesta buka hadiah: konfeti + balon + roket + tulisan *
 let burstTimers=[];
 function showBurstText(){ /* HAPPY BIRTHDAY meletus huruf per huruf */
   const box=$("#burst-text");box.innerHTML="";
-  ["HAPPY","BIRTHDAY","ISTRI KU"].forEach(word=>{
+  ["HAPPY","BIRTHDAY","TO YOU ♥"].forEach(word=>{
     const div=document.createElement("div");div.className="bw";
     [...word].forEach(ch=>{const s=document.createElement("span");s.textContent=ch;div.appendChild(s)});
     box.appendChild(div)});
