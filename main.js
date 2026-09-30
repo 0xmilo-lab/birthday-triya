@@ -14,14 +14,14 @@ const fmtT=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+pad2(s
 let cur=0;
 const entered={};
 function go(n){
-  n=clampN(n,1,8);
+  n=clampN(n,1,7);
   if(n===cur)return;
   if(n>1&&!preview&&CONFIG.terkunci&&!arrived&&target>Date.now())return; /* kunci produksi sampai waktunya */
   $$(".scene").forEach(s=>s.classList.remove("active"));
   $("#scene-"+n).classList.add("active");
   $("#scene-"+n).scrollTop=0;
   cur=n;setMode(n);
-  ({4:startLetter,5:renderMem,7:showWishes,8:startFinale}[n]||(()=>{}))();
+  ({4:startLetter,5:renderMem,7:startFinale}[n]||(()=>{}))();
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-go]");
@@ -296,20 +296,10 @@ $("#v-prog").addEventListener("keydown",e=>{if(!v.duration)return;
 $("#v-mute").addEventListener("click",()=>{v.muted=!v.muted;$("#v-mute").textContent=v.muted?"✕":"♪"});
 $("#v-full").addEventListener("click",()=>{const f=$("#video-frame");document.fullscreenElement?document.exitFullscreen():f.requestFullscreen&&f.requestFullscreen()});
 
-/* ---------- Scene 7: wishes ---------- */
-function showWishes(){const box=$("#wish-lines");box.innerHTML="";
-  String(CONFIG.ucapanSingkat||"[ISI DI SINI]").split("\n").forEach(t=>{const p=document.createElement("p");p.textContent=t;box.appendChild(p)});
-  [...box.children].forEach((p,i)=>setTimeout(()=>p.classList.add("show"),RM?0:350*(i+1)))}
-$("#wish-heart").addEventListener("click",e=>{ /* hati kecil naik dan memudar */
-  const r=e.currentTarget.getBoundingClientRect();
-  for(let i=0;i<(RM?2:7);i++){const s=document.createElement("span");s.className="mini-heart";s.textContent="♥";
-    s.style.left=r.left+R(-30,30)+"px";s.style.top=r.top-6+"px";s.style.fontSize=R(14,26)+"px";
-    document.body.appendChild(s);setTimeout(()=>s.remove(),1700)}});
-
-/* ---------- Scene 8: penutup + replay bersih ---------- */
+/* ---------- Scene 7: penutup + replay bersih ---------- */
 let finalRun=false;
 function startFinale(){if(finalRun)return;finalRun=true;
-  const t="With All My Love",el=$("#final-title");$("#final-caret").style.display="";
+  const t="With All My Love,",el=$("#final-title");$("#final-caret").style.display="";
   const lines=CONFIG.penutup&&CONFIG.penutup.length?CONFIG.penutup:["[ISI DI SINI]"];
   const box=$("#final-lines");box.innerHTML="";
   const showLines=()=>{box.innerHTML=lines.map(l=>`<p>${l}</p>`).join("");

@@ -12,11 +12,9 @@ const CONFIG = {
     "Semoga selalu diberikan kesehatan dan perlindungan ketika kita berjauhan, segala yang diingin tercapai dan selalu dimudahkan segala urusan.",
     "Maaf kalau aku masih banyak kurang dan selalu terus belajar setiap hari nya."
   ],
-  /* Baris baru = paragraf baru di halaman Wishes. */
-  ucapanSingkat: "Semoga selalu diberikan kesehatan dan perlindungan ketika kita berjauhan.\nSegala yang diingin tercapai dan selalu dimudahkan segala urusan.",
   penutup: [
-    "Maaf kalau aku masih banyak kurang dan selalu terus belajar setiap hari nya.",
-    "Selamat ulang tahun yang ke-28 untuk istriku tercinta."
+    "I'm sorry for everything.",
+    "Happy Birthday!"
   ],
   /* 6-12 foto. Contoh: { src: "assets/photos/1.webp", caption: "Senja itu" } */
   foto: [

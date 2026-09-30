@@ -39,7 +39,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;min-he
 .label{font-size:.82rem;letter-spacing:.32em;text-transform:uppercase;color:var(--rose);margin-bottom:.9rem}
 .label .orn,.orn{color:var(--gold);font-size:.8em;padding:.4rem}
 .tag{color:rgba(246,233,239,.85);margin:.7rem 0 1.4rem;font-size:1.12em}
-.hrt{color:var(--rose-strong)}
 .rule{border:0;border-top:1px solid var(--line);width:7rem;margin:1.2rem auto}
 .hint{color:rgba(246,233,239,.6);font-size:1em;margin-top:1rem}
 .back{align-self:flex-start;color:var(--rose);letter-spacing:.12em;font-size:.95rem;margin-bottom:1rem}
@@ -198,18 +197,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;min-he
 .v-prog{flex:1;height:22px;display:flex;align-items:center;cursor:pointer}
 .v-prog span{display:block;height:5px;width:0;border-radius:99px;background:linear-gradient(90deg,var(--rose-strong),var(--gold));position:relative;pointer-events:none}
 .v-time{font-size:.85rem;color:rgba(246,233,239,.75);white-space:nowrap}
-/* Scene 7 wishes */
-.wishes{padding:2rem 1.4rem}
-.wishes .tag{font-size:1.2em}
-#wish-lines p{opacity:0;transform:translateY(14px);transition:all .7s var(--ease);margin:.7em 0;font-size:1.12em}
-#wish-lines p.show{opacity:1;transform:none}
-.wish-heart{font-size:2.8rem;color:var(--rose-strong);margin:1rem 0 .4rem;animation:beat 1.8s infinite;text-shadow:0 0 30px rgba(217,115,143,.8)}
 .mini-heart{position:fixed;z-index:20;pointer-events:none;color:var(--rose);animation:rise 1.6s var(--ease) forwards}
 @keyframes rise{to{transform:translateY(-160px) scale(.4);opacity:0}}
-/* Scene 8 */
+/* Scene 7 finale */
 #final-lines p{opacity:0;transform:translateY(12px);transition:all .8s var(--ease);margin:.8em 0;font-size:1.15em}
 #final-lines p.show{opacity:1;transform:none}
-.forever{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--gold);margin:1.4rem 0}
 /* Milo pixel-art 16x16, gerak hanya via transform. */
 #milo{position:fixed;left:0;top:0;z-index:26;width:76px;pointer-events:none;will-change:transform}
 #milo[hidden]{display:none}
